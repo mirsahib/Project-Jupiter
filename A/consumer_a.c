@@ -33,3 +33,4 @@ int main(){
 	shmctl(shmid,IPC_RMID,NULL);
 	return 0;
 }
+//consumer
