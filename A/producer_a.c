@@ -17,6 +17,22 @@ struct matrix_class
 
 void *runner(void* argument){
 	struct matrix_class *arg = argument;
+	printf("Parent Thread: 1st Matrix\n");
+	for(int i=0;i<3;i++){
+		for(int j=0;j<3;j++){
+			printf("%d ",arg->arr1[i][j]);
+		}
+		printf("\n");
+	}
+	printf("Parent Thread: Second Matrix\n");
+	for(int i=0;i<3;i++){
+		for(int j=0;j<3;j++){
+			printf("%d ",arg->arr2[i][j]);
+		}
+		printf("\n");
+	}
+
+
 	gsl_matrix * m = gsl_matrix_alloc(3,3);
 	gsl_matrix * n = gsl_matrix_alloc(3,3);
 
@@ -27,10 +43,13 @@ void *runner(void* argument){
 		}
 	} 
 	gsl_matrix_mul_elements(m,n);
+
+
 	//write to shared memory
-	key_t key = ftok("file",60);
+	
 	int(*bufptr)[3];
-	int shmid = shmget(key,sizeof(int[3][3]),IPC_CREAT|0666);
+	//key_t key = ftok("file",60);
+	int shmid = shmget(1222,sizeof(int[3][3]),IPC_CREAT|0666);
 	if(shmid==-1){
 		perror("memory attached");
 		exit(1);
@@ -40,24 +59,14 @@ void *runner(void* argument){
 			perror("memory attached");
 			exit(1);
 		}else{
-			int element;
 			for(int i=0;i<3;i++){
 				for(int j=0;j<3;j++){
-					element = gsl_matrix_get(m,i,j);
-					bufptr[i][j] = element;
+					bufptr[i][j] = gsl_matrix_get(m,i,j);
 				}
 			}
-			printf("Writting successfull\n");
+			printf("Parent Thread Writting successfull\n");
 			shmdt(bufptr);
 		}
-	}
-	for (int i = 0; i < 3; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
-		{
-			printf("%g ",gsl_matrix_get(m,i,j));
-		}
-		printf("\n");
 	}
 }
 
@@ -68,7 +77,7 @@ int main(){
 	pid = fork();
 	if(pid<0){
 		//error
-		fprintf(stderr, "fork failded\n");
+		fprintf(stderr, "fork fail\n");
 		return 1;
 	}else if(pid ==0){
 		//child process
@@ -82,7 +91,7 @@ int main(){
 			perror("memmory attached");
 			exit(1);
 		}else{
-			printf("Creating new shared memory\n");
+			printf("Child creating new shared memory\n");
 			buf1ptr = shmat(shmid,0,0);
 			buf2ptr = shmat(shmid1,0,0);
 			if(buf1ptr==(void*)-1 && buf2ptr==(void*)-1){
@@ -97,14 +106,15 @@ int main(){
 						buf2ptr[i][j]=rand()%100;
 					}
 				}
-				printf("Writing successfull\n");
+				printf("Child writing successfull\n");
+				shmdt(buf1ptr);
 				shmdt(buf1ptr);
 			}//end of array writting
 		}//end of shared memory
 	}else{
 		//parent process
 		wait(NULL);
-		printf("Reading from shared memory\n");
+		printf("Parent reading from shared memory\n");
 		int shmid,shmid1;
 		int(*array)[3];
 		int(*array1)[3];
