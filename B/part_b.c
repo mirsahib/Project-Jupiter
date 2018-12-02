@@ -22,13 +22,13 @@ int main(){
             int counter=0;
             while(1){
                 char in;
+                scanf("%c",&in);
                 if(in == '\n'){
                     counter++;
                     if(counter==2){
                         break;
                     }
                 }else{
-                    scanf("%c",&in);
                     writemessage[i][j]=in;
                     j++;
                 }
@@ -40,7 +40,7 @@ int main(){
     for (int i = 0; i < 3; i++) {
         wait(NULL);
         read(processPipe[2*i],readmessage,sizeof(readmessage));
-        printf("Message from child process %d Message: %s",i,readmessage);
+        printf("\nMessage from child process %d Message: %s",i,readmessage);
     }
 }
 //final commit
