@@ -1,5 +1,5 @@
 <p align="center">
-  <h1>Assignment</h1><br>
+  <b>Assignment<b><br>
 </p>
 
 **A**. Write a program in which producer process creates a child process, child process takes
@@ -7,18 +7,22 @@ input to generate two matrices and put in the shared memory and parent process r
 matrices in the shared memory and then calculates the product matrix using multiple
 threads and stores in the shared memory, a separate client process reads product matrix and
 prints on the console.
+
 **B**. Write a program that creates three child processes and three pipes to communicate with each
 process. Each child process reads from different serial line and sends the characters read back
 to the parent process through a pipe. The parent process outputs all characters received on the
 console. A child terminates when two newline characters are received consecutively. The
 parent terminates after all three children have terminated. (hint: send-pipe and receive-pipe
 primitives can be used)
+
 **C**. The reader writer problem: A number of readers may simultaneously be reading from a file.
 Only one writer at a time may write to file, and no reader can be reading while a writer is
 writing. Using semaphores, Write solution to the reader writers problem that gives priority
 to writers.
+
 **D**. Modify the socket-based date server (Figure 3.21) in Chapter 3 so that the server
 services each client request in a separate thread.
+
 **E. Banker’s Algorithm**
 For this project, you will write a multithreaded program that implements the banker’s algorithm
 discussed in Section 7.5.3. Several customers request and release resources from the bank. The
