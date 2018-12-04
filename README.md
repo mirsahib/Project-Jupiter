@@ -1,6 +1,4 @@
-<p align="center">
-  <b>Assignment<b><br>
-</p>
+# Assignment
 
 **A**. Write a program in which producer process creates a child process, child process takes
 input to generate two matrices and put in the shared memory and parent process reads the
